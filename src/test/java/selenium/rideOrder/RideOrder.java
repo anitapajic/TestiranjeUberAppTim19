@@ -10,7 +10,7 @@ import selenium.helper.Helper;
 import java.util.concurrent.TimeUnit;
 
 public class RideOrder {
-    WebElement commentForm, passengerPanic, passengerSendPanic, coordinatesForm, startBtn, acceptBtn, endBtn, logout;
+    WebElement commentForm, passengerPanic, passengerSendPanic, coordinatesForm, startBtn, acceptBtn, endBtn, logout, driverPanic, driverSendPanic;
     public RideOrder() {
     }
     public void passengerMakesOrder(WebDriver chrome_driver, String fromLocation, String toLocation){
@@ -63,20 +63,43 @@ public class RideOrder {
         startBtn.click();
 
     }
-
     public void driverEndRide(WebDriver edge_driver,WebDriver chrome_driver) {
         WebDriverWait wait = new WebDriverWait(edge_driver, 20);
         endBtn = wait.until(ExpectedConditions.elementToBeClickable(By.id("endBtn")));
         edge_driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
         endBtn.click();
 
-        WebDriverWait wait2 = new WebDriverWait(edge_driver, 20);
-        logout = wait2.until(ExpectedConditions.elementToBeClickable(By.id("logout")));
-        logout.click();
+//        WebDriverWait wait2 = new WebDriverWait(edge_driver, 20);
+//        logout = wait2.until(ExpectedConditions.elementToBeClickable(By.id("logout")));
+//        logout.click();
 
 
         Helper.takeScreenshoot(edge_driver,"driverEndRide");
         Helper.takeScreenshoot(chrome_driver,"passengerEndRide");
+    }
+
+    public void driverLogOut(WebDriver edge_driver){
+        WebDriverWait wait = new WebDriverWait(edge_driver, 20);
+        logout = wait.until(ExpectedConditions.elementToBeClickable(By.id("logout")));
+        logout.click();
+
+    }
+
+    public void panicByDriver(WebDriver edge_driver) {
+        WebDriverWait wait = new WebDriverWait(edge_driver, 20);
+        driverPanic = wait.until(ExpectedConditions.elementToBeClickable(By.id("panicBtn")));
+        edge_driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+        driverPanic.click();
+
+        edge_driver.findElement(By.id("reasonInput")).clear();
+        edge_driver.findElement(By.id("reasonInput")).sendKeys("Zaustavite voznju hitno!");
+
+        Helper.takeScreenshoot(edge_driver,"driver_panic_reason");
+
+        WebDriverWait wait2 = new WebDriverWait(edge_driver, 20);
+        driverSendPanic = wait2.until(ExpectedConditions.elementToBeClickable(By.id("changePass")));
+        driverSendPanic.click();
+
     }
     public void panicByPassenger(WebDriver chrome_driver) {
         WebDriverWait wait = new WebDriverWait(chrome_driver, 20);
@@ -93,6 +116,7 @@ public class RideOrder {
         passengerSendPanic = wait2.until(ExpectedConditions.elementToBeClickable(By.id("changePass")));
         passengerSendPanic.click();
     }
+
     public void rateRide(WebDriver chrome_driver) {
         WebDriverWait wait2 = new WebDriverWait(chrome_driver, 20);
         commentForm = wait2.until(ExpectedConditions.presenceOfElementLocated(By.id("commentInput")));

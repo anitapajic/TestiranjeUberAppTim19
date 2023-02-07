@@ -39,15 +39,32 @@ public class UberAppTest extends TestBase{
         rideOrder.panicByPassenger(chrome_driver);
     }
 
-    @Test
-    public void noAvailableDriver() throws InterruptedException {
+
+    @Test(priority = 4, testName = "4.Panic end ride by driver")
+    public void panicByDriver() {
         Login loginPassenger = new Login(chrome_driver);
         loginPassenger.loginWithPasswordAndUsername(PASSENGER_USERNAME,PASSWORD,"passenger");
-        Thread.sleep(2000);
+
+        rideOrder.passengerMakesOrder(chrome_driver, FROM_LOC, TO_LOC);
+        rideOrder.driverStartedRide(edge_driver);
+        rideOrder.panicByDriver(edge_driver);
+    }
+
+    @Test(priority = 5, testName = "5.Driver is not available")
+    public void noAvailableDriver() {
+        Login loginDriver = new Login(edge_driver);
+        loginDriver.loginWithPasswordAndUsername(DRIVER_USERNAME, PASSWORD, "driver");
+
+        rideOrder.driverLogOut(edge_driver);
+
+        Login loginPassenger = new Login(chrome_driver);
+        loginPassenger.loginWithPasswordAndUsername(PASSENGER_USERNAME,PASSWORD,"passenger");
+
         rideOrder.passengerMakesOrder(chrome_driver, FROM_LOC, TO_LOC);
 
-        WebDriverWait alert = new WebDriverWait(chrome_driver, 40);
+        WebDriverWait alert = new WebDriverWait(chrome_driver, 4);
         alert.until(ExpectedConditions.alertIsPresent()).accept();
     }
+
 
 }
