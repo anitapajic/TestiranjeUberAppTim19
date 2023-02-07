@@ -10,7 +10,7 @@ import selenium.helper.Helper;
 import java.util.concurrent.TimeUnit;
 
 public class RideOrder {
-    WebElement commentForm, passengerPanic, passengerSendPanic, coordinatesForm, startBtn, acceptBtn, endBtn, logout, driverPanic, driverSendPanic;
+    WebElement coordinatesForm, startBtn, acceptBtn, endBtn, logout, declineBtn, driverPanic, driverSendPanic, passengerPanic, passengerSendPanic, commentForm;
     public RideOrder() {
     }
     public void passengerMakesOrder(WebDriver chrome_driver, String fromLocation, String toLocation){
@@ -63,6 +63,21 @@ public class RideOrder {
         startBtn.click();
 
     }
+
+    public void driverDeclineRide(WebDriver edge_driver, WebDriver chrome_driver) {
+
+        edge_driver.findElement(By.id("declineReason")).clear();
+        edge_driver.findElement(By.id("declineReason")).sendKeys("Declined ride with reason!");
+
+        WebDriverWait wait = new WebDriverWait(edge_driver, 20);
+        declineBtn = wait.until(ExpectedConditions.elementToBeClickable(By.id("declineBtn")));
+        edge_driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+        declineBtn.click();
+
+        Helper.takeScreenshoot(edge_driver,"driverDeclineRide");
+        Helper.takeScreenshoot(chrome_driver,"passengerDeclineRide");
+    }
+
     public void driverEndRide(WebDriver edge_driver,WebDriver chrome_driver) {
         WebDriverWait wait = new WebDriverWait(edge_driver, 20);
         endBtn = wait.until(ExpectedConditions.elementToBeClickable(By.id("endBtn")));
@@ -101,6 +116,7 @@ public class RideOrder {
         driverSendPanic.click();
 
     }
+
     public void panicByPassenger(WebDriver chrome_driver) {
         WebDriverWait wait = new WebDriverWait(chrome_driver, 20);
         passengerPanic = wait.until(ExpectedConditions.elementToBeClickable(By.id("panicBtn")));

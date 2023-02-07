@@ -15,8 +15,8 @@ public class UberAppTest extends TestBase{
     public static final String TO_LOC = "Strazilovska 16, Novi Sad";
     RideOrder rideOrder = new RideOrder();
 
-    @Test
-    public void happyFlow() throws InterruptedException {
+    @Test(priority = 1, testName = "1.Successful ride order")
+    public void happyFlow() {
         //user login
         Login loginPassenger = new Login(chrome_driver);
         loginPassenger.loginWithPasswordAndUsername(PASSENGER_USERNAME, PASSWORD, "passenger");
@@ -24,11 +24,23 @@ public class UberAppTest extends TestBase{
         //driver login
         Login loginDriver = new Login(edge_driver);
         loginDriver.loginWithPasswordAndUsername(DRIVER_USERNAME, PASSWORD, "driver");
-        Thread.sleep(2000);
+
         rideOrder.passengerMakesOrder(chrome_driver, FROM_LOC, TO_LOC);
         rideOrder.driverStartedRide(edge_driver);
         rideOrder.driverEndRide(edge_driver, chrome_driver);
+        rideOrder.rateRide(chrome_driver);
     }
+
+    @Test(priority = 2, testName = "2.Declined ride order")
+    public void declinedRideOrder() {
+        //user login
+        Login loginPassenger = new Login(chrome_driver);
+        loginPassenger.loginWithPasswordAndUsername(PASSENGER_USERNAME, PASSWORD, "passenger");
+
+        rideOrder.passengerMakesOrder(chrome_driver, FROM_LOC, TO_LOC);
+        rideOrder.driverDeclineRide(edge_driver, chrome_driver);
+    }
+
     @Test(priority = 3, testName = "3.Panic end ride by passenger")
     public void panicByPasssenger() {
         Login loginPassenger = new Login(chrome_driver);
@@ -38,7 +50,6 @@ public class UberAppTest extends TestBase{
         rideOrder.driverStartedRide(edge_driver);
         rideOrder.panicByPassenger(chrome_driver);
     }
-
 
     @Test(priority = 4, testName = "4.Panic end ride by driver")
     public void panicByDriver() {
