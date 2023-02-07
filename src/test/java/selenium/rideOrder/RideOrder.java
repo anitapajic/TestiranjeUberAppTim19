@@ -55,4 +55,20 @@ public class RideOrder {
         startBtn.click();
 
     }
+
+    public void driverEndRide(WebDriver edge_driver,WebDriver chrome_driver) {
+        WebDriverWait wait = new WebDriverWait(edge_driver, 20);
+        endBtn = wait.until(ExpectedConditions.elementToBeClickable(By.id("endBtn")));
+        edge_driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+        endBtn.click();
+
+        WebDriverWait wait2 = new WebDriverWait(edge_driver, 20);
+        logout = wait2.until(ExpectedConditions.elementToBeClickable(By.id("logout")));
+        logout.click();
+
+
+        Helper.takeScreenshoot(edge_driver,"driverEndRide");
+        Helper.takeScreenshoot(chrome_driver,"passengerEndRide");
+    }
+
 }

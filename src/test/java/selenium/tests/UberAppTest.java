@@ -1,5 +1,7 @@
 package selenium.tests;
 
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.Test;
 import selenium.login.Login;
 import selenium.rideOrder.RideOrder;
@@ -25,8 +27,18 @@ public class UberAppTest extends TestBase{
         Thread.sleep(2000);
         rideOrder.passengerMakesOrder(chrome_driver, FROM_LOC, TO_LOC);
         rideOrder.driverStartedRide(edge_driver);
+        rideOrder.driverEndRide(edge_driver, chrome_driver);
     }
 
+    @Test
+    public void noAvailableDriver() throws InterruptedException {
+        Login loginPassenger = new Login(chrome_driver);
+        loginPassenger.loginWithPasswordAndUsername(PASSENGER_USERNAME,PASSWORD,"passenger");
+        Thread.sleep(2000);
+        rideOrder.passengerMakesOrder(chrome_driver, FROM_LOC, TO_LOC);
 
+        WebDriverWait alert = new WebDriverWait(chrome_driver, 40);
+        alert.until(ExpectedConditions.alertIsPresent()).accept();
+    }
 
 }
