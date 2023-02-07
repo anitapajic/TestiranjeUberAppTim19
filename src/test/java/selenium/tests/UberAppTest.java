@@ -29,6 +29,15 @@ public class UberAppTest extends TestBase{
         rideOrder.driverStartedRide(edge_driver);
         rideOrder.driverEndRide(edge_driver, chrome_driver);
     }
+    @Test(priority = 3, testName = "3.Panic end ride by passenger")
+    public void panicByPasssenger() {
+        Login loginPassenger = new Login(chrome_driver);
+        loginPassenger.loginWithPasswordAndUsername(PASSENGER_USERNAME,PASSWORD,"passenger");
+
+        rideOrder.passengerMakesOrder(chrome_driver, FROM_LOC, TO_LOC);
+        rideOrder.driverStartedRide(edge_driver);
+        rideOrder.panicByPassenger(chrome_driver);
+    }
 
     @Test
     public void noAvailableDriver() throws InterruptedException {
